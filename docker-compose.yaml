@@ -40,7 +40,6 @@ services:
       - ELASTIC_HOSTS=http://elasticsearch:9200
 
 
-
   filebeat:
     depends_on:
       logstash:
