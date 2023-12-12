@@ -1,6 +1,0 @@
-filebeat.inputs:
-  - type: file
-    paths:
-      - /home/ghoulbel/Projects/BZ/ELK-testing/logs/*.log
-output.elasticsearch:
-  hosts: ["localhost:9200"]

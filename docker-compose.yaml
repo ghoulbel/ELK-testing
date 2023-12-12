@@ -1,13 +1,13 @@
 version: "3.8"
 services:
 
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:8.11.1
-    container_name: filebeat
-
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: elasticsearch    
+    labels:
+     co.elastic.logs/module: elasticsearch
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
     environment:
       - node.name=elasticsearch
       - cluster.name=elasticsearch-docker_cluster
@@ -20,4 +20,41 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
     ports:
-      - "9200:9200"
+      - 9200:9200
+
+
+  logstash:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    container_name: logstash    
+    image: docker.elastic.co/logstash/logstash:8.11.1    
+    labels:
+      co.elastic.logs/module: logstash
+    user: root
+    volumes:
+      - ./logs/:/usr/share/logstash/ingest_data/
+      - ./logstash/data:/usr/share/logstash/data
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    environment:
+      - xpack.monitoring.enabled=false
+      - ELASTIC_HOSTS=http://elasticsearch:9200
+
+
+  kibana:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.11.1
+    labels:
+      co.elastic.logs/module: kibana
+    volumes:
+      - ./kibana/data:/usr/share/kibana/data
+    environment:
+      - node.name=kibana
+      - cluster.name=elasticsearch-docker_cluster
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - 5601:5601

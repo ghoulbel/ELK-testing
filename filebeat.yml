@@ -1,0 +1,9 @@
+filebeat.inputs:
+- type: filestream
+  id: test-logs
+  enabled: true
+  paths:
+    - /usr/share/filebeat/ingest_data/*.log
+
+output.logstash:
+  hosts: ["127.0.0.1:5044"]
