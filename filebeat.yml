@@ -4,6 +4,19 @@ filebeat.inputs:
   enabled: true
   paths:
     - /usr/share/filebeat/ingest_data/*.log
+  fields:
+    - unique_id: "Unique ID"
+    - indicator_id: "Indicator ID"
+    - name: "Name"
+    - measure: "Measure"
+    - measure_info: "Measure Info"
+    - geo_type_name: "Geo Type Name"
+    - geo_join_id: "Geo Join ID"
+    - geo_place_name: "Geo Place Name"
+    - time_period: "Time Period"
+    - start_date: "Start_Date"
+    - data_value: "Data Value"
+    - message: "Message"
 
 output.logstash:
   hosts: ["logstash:5400"]
