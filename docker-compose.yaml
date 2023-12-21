@@ -8,6 +8,7 @@ services:
      co.elastic.logs/module: elasticsearch
     volumes:
       - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     environment:
       - node.name=elasticsearch
       - cluster.name=elasticsearch-docker_cluster
